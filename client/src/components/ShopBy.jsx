@@ -15,6 +15,12 @@ const ShopBy = ({ filter, title }) => {
     { src: "/GenInfo/puma.jpg", name: "Puma", to: "/search/puma" },
   ];
   useEffect(() => {
+    if (filter === "bestSellers") {
+      setProducts(data);
+      setLoading(false);
+      return;
+    }
+    
     let isMounted = true;
     const fetchData = async () => {
       try {
@@ -22,7 +28,7 @@ const ShopBy = ({ filter, title }) => {
           `${import.meta.env.VITE_BASE_URL}/api/filter/${filter}`
         );
         if (isMounted) {
-          setProducts(res.data);
+          setProducts(Array.isArray(res.data) ? res.data : []);
           setLoading(false);
         }
       } catch (err) {
@@ -37,7 +43,7 @@ const ShopBy = ({ filter, title }) => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [filter]);
 
   return (
     <>
@@ -47,7 +53,8 @@ const ShopBy = ({ filter, title }) => {
         {error && <p>Error while fetching: {error.message}</p>}
 
         <div className="flex flex-wrap justify-center">
-        {data.map((elem, id) => (
+        {filter === "bestSellers" ? (
+          data.map((elem, id) => (
           <div
             key={id}
             className="relative w-[340px] h-[340px] mx-2 mb-6 hover:text-white"
@@ -68,7 +75,12 @@ const ShopBy = ({ filter, title }) => {
               Explore →
             </button>
           </div>
-        ))}
+          ))
+        ) : (
+          Array.isArray(products) && products.map((product, id) => (
+            <HorSlider key={product._id || id} product={product} home={true} />
+          ))
+        )}
       </div>
       </div>
     </>
