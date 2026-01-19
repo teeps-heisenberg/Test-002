@@ -2,21 +2,17 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import HorSlider from "./HorSlider";
 import { useNavigate } from "react-router-dom";
+import { brandsData } from "../constants/brandsData";
 
 const ShopBy = ({ filter, title }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const data = [
-    { src: "/GenInfo/adidas.jpg", name: "Adidas", to: "/search/adidas" },
-    { src: "/GenInfo/nike.png", name: "Nike", to: "/search/nike" },
-    { src: "/GenInfo/skechers.jpg", name: "Skechers", to: "/search/skechers" },
-    { src: "/GenInfo/puma.jpg", name: "Puma", to: "/search/puma" },
-  ];
+  
   useEffect(() => {
     if (filter === "bestSellers") {
-      setProducts(data);
+      setProducts(brandsData);
       setLoading(false);
       return;
     }
@@ -54,7 +50,7 @@ const ShopBy = ({ filter, title }) => {
 
         <div className="flex flex-wrap justify-center">
         {filter === "bestSellers" ? (
-          data.map((elem, id) => (
+          brandsData.map((elem, id) => (
           <div
             key={id}
             className="relative w-[340px] h-[340px] mx-2 mb-6 hover:text-white"
